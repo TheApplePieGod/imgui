@@ -3,7 +3,16 @@ cmake_minimum_required(VERSION 3.14)
 project(imgui)
 
 include_directories(".")
-include_directories("backends")
 
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "*.cpp" "*.h")
-add_library(imgui STATIC "${SOURCES}")
+add_library(imgui STATIC 
+    "imconfig.h"
+    "imgui.h"
+    "imgui.cpp"
+    "imgui_draw.cpp"
+    "imgui_internal.h"
+    "imgui_widgets.cpp"
+    "imstb_rectpack.h"
+    "imstb_textedit.h"
+    "imstb_truetype.h"
+    "imgui_demo.cpp"
+)
