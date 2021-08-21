@@ -1539,6 +1539,17 @@ ImTextureID ImGui_ImplVulkan_AddTexture(VkSampler sampler, VkImageView image_vie
     return (ImTextureID)descriptor_set;
 }
 
+void ImGui_ImplVulkan_RemoveTexture(ImTextureID texture)
+{
+    ImGui_ImplVulkan_Data* bd = ImGui_ImplVulkan_GetBackendData();
+    ImGui_ImplVulkan_InitInfo* v = &bd->VulkanInitInfo;
+
+    vkDeviceWaitIdle(v->Device);
+
+    VkDescriptorSet sets[1] = { (VkDescriptorSet)texture };
+    vkFreeDescriptorSets(v->Device, v->DescriptorPool, 1, sets);
+}
+
 //--------------------------------------------------------------------------------------------------------
 // MULTI-VIEWPORT / PLATFORM INTERFACE SUPPORT
 // This is an _advanced_ and _optional_ feature, allowing the backend to create and handle multiple viewports simultaneously.
