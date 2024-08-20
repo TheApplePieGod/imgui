@@ -83,6 +83,7 @@ struct ImGui_ImplVulkan_InitInfo
     VkSampleCountFlagBits           MSAASamples;                  // 0 defaults to VK_SAMPLE_COUNT_1_BIT
 
     // (Optional)
+    VkDescriptorSetLayout           DescriptorSetLayout;
     VkPipelineCache                 PipelineCache;
     uint32_t                        Subpass;
 
@@ -101,12 +102,14 @@ struct ImGui_ImplVulkan_InitInfo
 
 // Called by user code
 IMGUI_IMPL_API bool         ImGui_ImplVulkan_Init(ImGui_ImplVulkan_InitInfo* info);
-IMGUI_IMPL_API void         ImGui_ImplVulkan_Shutdown();
+IMGUI_IMPL_API void         ImGui_ImplVulkan_Shutdown(bool preserve_set_layout = false);
 IMGUI_IMPL_API void         ImGui_ImplVulkan_NewFrame();
 IMGUI_IMPL_API void         ImGui_ImplVulkan_RenderDrawData(ImDrawData* draw_data, VkCommandBuffer command_buffer, VkPipeline pipeline = VK_NULL_HANDLE);
 IMGUI_IMPL_API bool         ImGui_ImplVulkan_CreateFontsTexture();
 IMGUI_IMPL_API void         ImGui_ImplVulkan_DestroyFontsTexture();
 IMGUI_IMPL_API void         ImGui_ImplVulkan_SetMinImageCount(uint32_t min_image_count); // To override MinImageCount after initialization (e.g. if swap chain is recreated)
+
+IMGUI_IMPL_API VkDescriptorSetLayout ImGui_ImplVulkan_GetDescriptorSetLayout();
 
 // Register a texture (VkDescriptorSet == ImTextureID)
 // FIXME: This is experimental in the sense that we are unsure how to best design/tackle this problem

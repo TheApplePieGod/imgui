@@ -1144,6 +1144,7 @@ bool    ImGui_ImplVulkan_Init(ImGui_ImplVulkan_InitInfo* info)
         IM_ASSERT(info->RenderPass != VK_NULL_HANDLE);
 
     bd->VulkanInitInfo = *info;
+    bd->DescriptorSetLayout = info->DescriptorSetLayout;
 
     ImGui_ImplVulkan_CreateDeviceObjects();
 
@@ -1157,11 +1158,15 @@ bool    ImGui_ImplVulkan_Init(ImGui_ImplVulkan_InitInfo* info)
     return true;
 }
 
-void ImGui_ImplVulkan_Shutdown()
+void ImGui_ImplVulkan_Shutdown(bool preserve_set_layout)
 {
     ImGui_ImplVulkan_Data* bd = ImGui_ImplVulkan_GetBackendData();
     IM_ASSERT(bd != nullptr && "No renderer backend to shutdown, or already shutdown?");
     ImGuiIO& io = ImGui::GetIO();
+
+    // Relinquish ownership of the set layout if requested
+    if (preserve_set_layout)
+        bd->DescriptorSetLayout = nullptr;
 
     // First destroy objects in all viewports
     ImGui_ImplVulkan_DestroyDeviceObjects();
@@ -1204,6 +1209,12 @@ void ImGui_ImplVulkan_SetMinImageCount(uint32_t min_image_count)
     ImGui_ImplVulkanH_DestroyAllViewportsRenderBuffers(v->Device, v->Allocator);
 
     bd->VulkanInitInfo.MinImageCount = min_image_count;
+}
+
+VkDescriptorSetLayout ImGui_ImplVulkan_GetDescriptorSetLayout()
+{
+    ImGui_ImplVulkan_Data* bd = ImGui_ImplVulkan_GetBackendData();
+    return bd->DescriptorSetLayout;
 }
 
 // Register a texture
